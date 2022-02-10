@@ -43,3 +43,7 @@ quickSort :: (Ord a) => [a] -> [a]
 quickSort []     = []
 quickSort (x:xs) = quickSort [l | l <- xs, l < x] ++ x : quickSort [g | g <- xs, x <= g]
 
+quickSort' :: (Ord a) => [a] -> [a]
+quickSort' []     = []
+quickSort' (x:xs) = quickSort' (filter (<x) xs) ++ x : quickSort' (filter (x<=) xs)
+
