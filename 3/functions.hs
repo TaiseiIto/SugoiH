@@ -38,6 +38,12 @@ head' :: [a] -> a
 head' [] = error "Can't call head on an empty list, dummy!"
 head' (x:_) = x
 
+head'' :: [a] -> a
+head'' xs =
+ case xs of
+  []    -> error "No head for empty lists!"
+  (x:_) -> x
+
 tell :: (Show a) => [a] -> String
 tell []       = "The list is empty"
 tell (x:[])   = "The list has one element: " ++ show x
@@ -56,9 +62,7 @@ bmiTell weight height
  | otherwise     = "You're a whale, congratulations!"
  where
   bmi    = weight / height ** 2
-  skinny = 18.5
-  normal = 25.0
-  fat    = 30.0
+  (skinny, normal, fat) = (18.5, 25.0, 30.0)
 
 max' :: (Ord a) => a -> a -> a
 max' a b
@@ -71,3 +75,68 @@ a `myCompare` b
  | a <  b    = LT
  | otherwise = GT
 
+badGreeting :: String
+badGreeting = "Oh! Pfft. It's you."
+
+niceGreeting :: String
+niceGreeting = "Hello! So very nice to see you,"
+
+greet :: String -> String
+greet name@"Juan"     = niceGreeting ++ " " ++ name ++ "!"
+greet name@"Fernando" = niceGreeting ++ " " ++ name ++ "!"
+greet name            = badGreeting ++ " " ++ name
+
+initials :: String -> String -> String
+initials "" _               = "No name"
+initials _ ""               = "No name"
+initials firstname lastname = [f] ++ ". " ++ [l] ++ "."
+ where
+  f = head firstname
+  l = head lastname
+
+calcBmis :: [(Double, Double)] -> [Double]
+calcBmis xs = [bmi w h | (w, h) <- xs]
+ where
+  bmi weight height = weight / height ** 2
+
+calcBmis' :: [(Double, Double)] -> [Double]
+calcBmis' xs = [bmi | (w, h) <- xs, let bmi = w / h ** 2]
+
+calcBmis'' :: [(Double, Double)] -> [Double]
+calcBmis'' xs = [bmi | (w, h) <- xs, let bmi = w / h ** 2, bmi > 25.0]
+
+cylinder :: Double -> Double -> Double
+cylinder r h =
+ let
+  sideArea = 2 * pi * r * h
+  topArea  = pi * r ** 2
+ in
+  sideArea + 2 * topArea
+
+describeList0 :: [a] -> String
+describeList0 []  = "The list is empty."
+describeList0 [_] = "The list is a singleton list."
+describeList0 _   = "The list is a lonber list."
+
+describeList1 :: [a] -> String
+describeList1 ls = "The list is " ++
+ case ls of
+  []  -> "empty."
+  [_] -> "a singleton list."
+  _   -> "a longer list."
+
+describeList2 :: [a] -> String
+describeList2 ls = "The list is " ++ what ls
+ where
+  what []  = "empty."
+  what [_] = "a singleton list."
+  what _   = "a longer list."
+
+describeList3 :: [a] -> String
+describeList3 ls = "The list is " ++
+ let
+  what []  = "empty."
+  what [_] = "a singleton list."
+  what _   = "a longer list."
+ in what ls
+  
