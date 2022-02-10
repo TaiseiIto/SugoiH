@@ -78,3 +78,12 @@ product' = foldl (*) 1
 last' :: [a] -> a
 last' = foldl1 (\_ b -> b)
 
+and' :: [Bool] -> Bool
+and' = foldr (&&) True
+
+sqrtSums :: Int
+sqrtSums = length (takeWhile (< (1000 :: Double)) (scanl1 (+) (map sqrt [1..]))) + 1
+
+oddSquareSum :: Integer
+oddSquareSum = sum . takeWhile (<10000) . filter odd $ map (^(2::Integer)) [1..]
+
