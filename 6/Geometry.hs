@@ -10,16 +10,16 @@ module Geometry
  sphereVolume
 ) where
 
-cuboidArea :: Floating a => a -> a -> a -> a
+cuboidArea :: Num a => a -> a -> a -> a
 cuboidArea a b = (2 * a * b +) . (2 * (a + b) *)
 
-cuboidVolume :: Floating a => a -> a -> a -> a
+cuboidVolume :: Num a => a -> a -> a -> a
 cuboidVolume a = (*) . (a*)
 
-cubeArea :: Floating a => a -> a
+cubeArea :: Num a => a -> a
 cubeArea side = cuboidArea side side side
 
-cubeVolume :: Floating a => a -> a
+cubeVolume :: Num a => a -> a
 cubeVolume side = cuboidVolume side side side
 
 sphereArea :: Floating a => a -> a
