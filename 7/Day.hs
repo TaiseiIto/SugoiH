@@ -1,3 +1,5 @@
+{-# OPTIONS -Wall -Werror #-}
+
 data Day =
  Monday    |
  Tuesday   |
