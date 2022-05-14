@@ -5,7 +5,7 @@ module Tree where
 data Tree a
  where
   EmptyTree :: Tree a
-  Node :: Ord a => a -> Tree a -> Tree a -> Tree a
+  Node :: a -> Tree a -> Tree a -> Tree a
 
 deriving instance Show a => Show (Tree a)
 
@@ -25,4 +25,8 @@ treeElem value (Node root_value left_subtree right_subtree)
 
 numsTree :: Ord a => [a] -> Tree a
 numsTree = foldr treeInsert EmptyTree
+
+instance Functor Tree where
+ fmap _ EmptyTree = EmptyTree
+ fmap f (Node x left right) = Node (f x) (fmap f left) (fmap f right)
 
