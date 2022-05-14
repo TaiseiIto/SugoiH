@@ -14,4 +14,5 @@ main = do
   bigFirstName = map Data.Char.toUpper firstName
   bigLastName = map Data.Char.toUpper lastName
  putStrLn $ "Hey " ++ bigFirstName ++ " " ++ bigLastName ++ ", how are you?"
+ return ()
 

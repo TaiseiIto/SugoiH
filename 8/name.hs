@@ -8,4 +8,5 @@ main = do
  putStr "YourName : "
  name <- getLine
  putStrLn $ "Hey " ++ name ++ ", you rock!"
+ return ()
 
