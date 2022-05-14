@@ -1,10 +1,10 @@
 {-# OPTIONS -Wall -Werror #-}
 
-import System.IO
+import qualified System.IO
 
 main :: IO ()
 main = do
- hSetBuffering stdout NoBuffering
+ System.IO.hSetBuffering System.IO.stdout System.IO.NoBuffering
  putStr "YourName : "
  name <- getLine
  putStrLn $ "Hey " ++ name ++ ", you rock!"

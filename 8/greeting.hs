@@ -1,17 +1,17 @@
 {-# OPTIONS -Wall -Werror #-}
 
-import Data.Char
-import System.IO
+import qualified Data.Char
+import qualified System.IO
 
 main :: IO ()
 main = do
- hSetBuffering stdout NoBuffering
+ System.IO.hSetBuffering System.IO.stdout System.IO.NoBuffering
  putStr "Your first name : "
  firstName <- getLine
  putStr "Your last name : "
  lastName <- getLine
  let
-  bigFirstName = map toUpper firstName
-  bigLastName = map toUpper lastName
+  bigFirstName = map Data.Char.toUpper firstName
+  bigLastName = map Data.Char.toUpper lastName
  putStrLn $ "Hey " ++ bigFirstName ++ " " ++ bigLastName ++ ", how are you?"
 
