@@ -1,5 +1,7 @@
 {-# OPTIONS -Wall -Werror #-}
 
+module Tree where
+
 data Tree a
  where
   EmptyTree :: Tree a
