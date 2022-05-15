@@ -53,8 +53,12 @@ printUsage = putStrLn . usage
 
 remove :: String -> Int -> IO ()
 remove fileName number = do
- putStrLn $ "fileName = " ++ fileName
- putStrLn $ "number = " ++ show number
+ fileContents <- System.IO.readFile fileName
+ let
+  numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
+  newNumberedTasks = Data.Map.filterWithKey (\key _ -> key /= number) numberedTasks
+  newTasks = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") "" newNumberedTasks
+ System.IO.writeFile fileName newTasks
  return ()
 
 usage :: String -> String
@@ -69,6 +73,6 @@ view :: String -> IO()
 view fileName = do
  fileContents <- System.IO.readFile fileName
  let numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
- putStrLn . Data.Map.foldlWithKey (\string key task -> string ++ show key ++ " - " ++ task ++ "\n") "" $ numberedTasks
+ putStrLn . Data.Map.foldlWithKey' (\string key task -> string ++ show key ++ " - " ++ task ++ "\n") "" $ numberedTasks
  return ()
 
