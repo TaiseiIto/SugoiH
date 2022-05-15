@@ -26,6 +26,9 @@ action programName ("remove" : arguments) = do
  putStrLn . invalidArgumentsMessage "remove" $ arguments
  printUsage programName
  return ()
+action _ ["view", fileName] = do
+ view fileName
+ return ()
 action programName ("view" : arguments) = do
  putStrLn . invalidArgumentsMessage "view" $ arguments
  printUsage programName
@@ -51,4 +54,9 @@ usage programName = unlines . map (programName ++) $
   " remove <file name> <todo number>",
   " view <file name>"
  ]
+
+view :: String -> IO()
+view fileName = do
+ fileContents <- System.IO.readFile fileName
+ putStrLn fileContents
 
