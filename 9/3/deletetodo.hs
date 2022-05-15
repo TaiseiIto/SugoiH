@@ -9,5 +9,6 @@ main = do
  let
   todoTasks = lines contents
   numberedTasks = Data.Map.fromList $ zip ([0..] :: [Int]) todoTasks
- print numberedTasks
+ putStrLn "These are your TO-DO items:"
+ putStrLn . unlines . map (\key -> show key ++ " - " ++ numberedTasks Data.Map.! key) $ Data.Map.keys numberedTasks
 
