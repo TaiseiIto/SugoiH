@@ -1,6 +1,8 @@
 {-# OPTIONS -Wall -Werror #-}
 
+import qualified Control.Exception
 import qualified Data.Map
+import qualified System.Directory
 import qualified System.Environment
 import qualified System.IO
 
@@ -58,7 +60,20 @@ remove fileName number = do
   numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
   newNumberedTasks = Data.Map.filterWithKey (\key _ -> key /= number) numberedTasks
   newTasks = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") "" newNumberedTasks
- System.IO.writeFile fileName newTasks
+ Control.Exception.bracket
+  (System.IO.openTempFile "." "temp")
+  (
+   \(tempName, tempFile) -> do
+    System.IO.hClose tempFile
+    System.Directory.removeFile tempName
+  )
+  (
+   \(tempName, tempFile) -> do
+    System.IO.hPutStr tempFile newTasks
+    System.IO.hClose tempFile
+    System.Directory.removeFile fileName
+    System.Directory.renameFile tempName fileName
+  )
  return ()
 
 usage :: String -> String
