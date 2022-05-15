@@ -25,6 +25,13 @@ action programName ("add" : arguments) = do
  putStrLn . invalidArgumentsMessage "add" $ arguments
  printUsage programName
  return ()
+action _ ["bump", fileName, number] = do
+ bump fileName . (read :: String -> Int) $ number
+ return ()
+action programName ("bump" : arguments) = do
+ putStrLn . invalidArgumentsMessage "bump" $ arguments
+ printUsage programName
+ return()
 action _ ["remove", fileName, number] = do
  remove fileName . (read :: String -> Int) $ number
  return ()
@@ -46,6 +53,22 @@ action programName (command : _) = do
 
 add :: String -> String -> IO ()
 add fileName = System.IO.appendFile fileName . (++ "\n")
+
+bump :: String -> Int -> IO ()
+bump fileName number = do
+ fileContents <- System.IO.readFile fileName
+ let
+  numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
+  newNumberedTasks = Data.Map.foldlWithKey' (\tasks key task -> Data.Map.insert (bumpNewKey number key) task tasks) Data.Map.empty numberedTasks
+  newTasks = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") "" newNumberedTasks
+ putStrLn newTasks
+ return ()
+
+bumpNewKey :: Int -> Int -> Int
+bumpNewKey number key
+ | key <  number = key + 1
+ | key == number = 0
+ | otherwise     = key
 
 invalidArgumentsMessage :: String -> [String] -> String
 invalidArgumentsMessage command = ("Invalid " ++) . (command ++) . (" arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) ""
