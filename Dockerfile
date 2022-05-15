@@ -2,8 +2,6 @@ FROM alpine
 RUN apk update
 # g++, git, ld, make, etc.
 RUN apk add --no-cache alpine-sdk
-# bash
-RUN apk add --no-cache bash
 # git setting
 RUN git config --global pull.rebase false
 # Haskell
@@ -41,6 +39,4 @@ RUN apk del tzdata
 WORKDIR /root
 RUN git clone https://github.com/TaiseiIto/SugoiH.git
 WORKDIR SugoiH
-
-ENTRYPOINT ["bash"]
 
