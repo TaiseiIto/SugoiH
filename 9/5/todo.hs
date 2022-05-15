@@ -1,6 +1,7 @@
 {-# OPTIONS -Wall -Werror #-}
 
 import qualified System.Environment
+import qualified System.IO
 
 main :: IO ()
 main = do
@@ -13,6 +14,9 @@ action :: String -> [String] -> IO ()
 action programName [] = do
  putStrLn "No command"
  printUsage programName
+ return ()
+action _ ["add", fileName, todo] = do
+ System.IO.appendFile fileName $ todo ++ "\n"
  return ()
 action programName ("add" : arguments) = do
  putStrLn . invalidArgumentsMessage "add" $ arguments
