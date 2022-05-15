@@ -12,6 +12,9 @@ RUN apk add --no-cache curl
 RUN apk add --no-cache musl-dev
 RUN apk add --no-cache zlib-dev
 RUN curl -sSL https://get.haskellstack.org/ | sh
+RUN apk add --no-cache cabal
+RUN cabal update
+RUN cabal install --lib random
 # ssh
 RUN apk add --no-cache openssh
 RUN mkdir /root/.ssh
