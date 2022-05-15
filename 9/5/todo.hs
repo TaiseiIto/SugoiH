@@ -14,16 +14,16 @@ action programName [] = do
  putStrLn "No command"
  printUsage programName
  return ()
-action programName ("add" : _) = do
- putStrLn $ "add"
+action programName ("add" : arguments) = do
+ putStrLn . ("Invalid add arguments : " ++) . foldl1 (\concatenated argument -> concatenated ++ argument) $ arguments
  printUsage programName
  return ()
-action programName ("remove" : _) = do
- putStrLn $ "remove"
+action programName ("remove" : arguments) = do
+ putStrLn . ("Invalid remove arguments : " ++) . foldl1 (\concatenated argument -> concatenated ++ argument) $ arguments
  printUsage programName
  return ()
-action programName ("view" : _) = do
- putStrLn $ "view"
+action programName ("view" : arguments) = do
+ putStrLn . ("Invalid view arguments : " ++) . foldl1 (\concatenated argument -> concatenated ++ argument) $ arguments
  printUsage programName
  return ()
 action programName (command : _) = do
