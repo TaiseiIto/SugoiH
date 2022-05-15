@@ -15,21 +15,24 @@ action programName [] = do
  printUsage programName
  return ()
 action programName ("add" : arguments) = do
- putStrLn . ("Invalid add arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) "" $ arguments
+ putStrLn . invalidArgumentsMessage "add" $ arguments
  printUsage programName
  return ()
 action programName ("remove" : arguments) = do
- putStrLn . ("Invalid remove arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) "" $ arguments
+ putStrLn . invalidArgumentsMessage "remove" $ arguments
  printUsage programName
  return ()
 action programName ("view" : arguments) = do
- putStrLn . ("Invalid view arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) "" $ arguments
+ putStrLn . invalidArgumentsMessage "view" $ arguments
  printUsage programName
  return ()
 action programName (command : _) = do
  putStrLn $ "Invalid command : " ++ command
  printUsage programName
  return ()
+
+invalidArgumentsMessage :: String -> [String] -> String
+invalidArgumentsMessage command = ("Invalid " ++) . (command ++) . (" arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) ""
 
 printUsage :: String -> IO ()
 printUsage = putStrLn . usage
