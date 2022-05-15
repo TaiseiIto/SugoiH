@@ -4,6 +4,12 @@ RUN apk update
 RUN apk add --no-cache alpine-sdk
 # git setting
 RUN git config --global pull.rebase false
+# Haskell
+RUN apk add ghc
+RUN apk add curl
+RUN apk add musl-dev
+RUN apk add zlib-dev
+RUN curl -sSL https://get.haskellstack.org/ | sh
 # ssh
 RUN apk add --no-cache openssh
 RUN mkdir /root/.ssh
