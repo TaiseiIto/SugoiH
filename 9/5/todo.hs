@@ -15,15 +15,15 @@ action programName [] = do
  printUsage programName
  return ()
 action programName ("add" : arguments) = do
- putStrLn . ("Invalid add arguments : " ++) . foldl1 (\concatenated argument -> concatenated ++ argument) $ arguments
+ putStrLn . ("Invalid add arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) "" $ arguments
  printUsage programName
  return ()
 action programName ("remove" : arguments) = do
- putStrLn . ("Invalid remove arguments : " ++) . foldl1 (\concatenated argument -> concatenated ++ argument) $ arguments
+ putStrLn . ("Invalid remove arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) "" $ arguments
  printUsage programName
  return ()
 action programName ("view" : arguments) = do
- putStrLn . ("Invalid view arguments : " ++) . foldl1 (\concatenated argument -> concatenated ++ argument) $ arguments
+ putStrLn . ("Invalid view arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) "" $ arguments
  printUsage programName
  return ()
 action programName (command : _) = do
