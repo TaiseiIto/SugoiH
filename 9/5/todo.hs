@@ -77,12 +77,15 @@ printUsage :: String -> IO ()
 printUsage = putStrLn . usage
 
 remove :: String -> Int -> IO ()
-remove fileName number = do
+remove fileName number = rewrite fileName $ reassemble . deleteTask . disassemble
+ where
+  disassemble = Data.Map.fromList . zip ([0..] :: [Int]) . lines
+  deleteTask  = Data.Map.filterWithKey (\key _ -> key /= number)
+  reassemble  = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") ""
+
+rewrite :: String -> (String -> String) -> IO ()
+rewrite fileName convert = do
  fileContents <- System.IO.readFile fileName
- let
-  numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
-  newNumberedTasks = Data.Map.filterWithKey (\key _ -> key /= number) numberedTasks
-  newTasks = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") "" newNumberedTasks
  Control.Exception.bracketOnError
   (System.IO.openTempFile "." "temp")
   (
@@ -92,7 +95,7 @@ remove fileName number = do
   )
   (
    \(tempName, tempFile) -> do
-    System.IO.hPutStr tempFile newTasks
+    System.IO.hPutStr tempFile . convert $ fileContents
     System.IO.hClose tempFile
     System.Directory.removeFile fileName
     System.Directory.renameFile tempName fileName
