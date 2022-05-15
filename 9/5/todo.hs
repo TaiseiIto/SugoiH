@@ -1,5 +1,6 @@
 {-# OPTIONS -Wall -Werror #-}
 
+import qualified Data.Map
 import qualified System.Environment
 import qualified System.IO
 
@@ -58,5 +59,6 @@ usage programName = unlines . map (programName ++) $
 view :: String -> IO()
 view fileName = do
  fileContents <- System.IO.readFile fileName
- putStrLn fileContents
+ let numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
+ print numberedTasks
 
