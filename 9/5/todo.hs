@@ -58,14 +58,12 @@ bump :: String -> Int -> IO ()
 bump fileName number = rewrite fileName $ reassemble . bumpTask . disassemble
  where
   disassemble = Data.Map.fromList . zip ([0..] :: [Int]) . lines
-  bumpTask = Data.Map.foldlWithKey' (\tasks key task -> Data.Map.insert (bumpNewKey number key) task tasks) Data.Map.empty
+  bumpTask = Data.Map.foldlWithKey' (\tasks key task -> Data.Map.insert (bumpNewKey key) task tasks) Data.Map.empty
   reassemble = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") ""
-
-bumpNewKey :: Int -> Int -> Int
-bumpNewKey number key
- | key <  number = key + 1
- | key == number = 0
- | otherwise     = key
+  bumpNewKey key
+   | key <  number = key + 1
+   | key == number = 0
+   | otherwise     = key
 
 invalidArgumentsMessage :: String -> [String] -> String
 invalidArgumentsMessage command = ("Invalid " ++) . (command ++) . (" arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) ""
