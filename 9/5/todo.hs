@@ -60,5 +60,5 @@ view :: String -> IO()
 view fileName = do
  fileContents <- System.IO.readFile fileName
  let numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
- print numberedTasks
+ putStrLn . Data.Map.foldlWithKey (\string key task -> string ++ show key ++ " - " ++ task ++ "\n") "" $ numberedTasks
 
