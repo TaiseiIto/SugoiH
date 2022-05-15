@@ -2,7 +2,7 @@ DOCKER = docker
 DOCKER_IMAGE = sugoih
 DOCKER_IMAGE_TAG = latest
 DOCKER_CONTAINER = sugoih
-DOCKER_SHELL = /bin/sh
+DOCKER_SHELL = /bin/bash
 
 ifeq ($(OS), Windows_NT)
 BLANK =
