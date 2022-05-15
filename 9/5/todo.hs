@@ -12,20 +12,27 @@ main = do
 action :: String -> [String] -> IO ()
 action programName [] = do
  putStrLn "No command"
- putStrLn . usage $ programName
+ printUsage programName
  return ()
-action _ ("add" : _) = do
+action programName ("add" : _) = do
  putStrLn $ "add"
+ printUsage programName
  return ()
-action _ ("remove" : _) = do
+action programName ("remove" : _) = do
  putStrLn $ "remove"
+ printUsage programName
  return ()
-action _ ("view" : _) = do
+action programName ("view" : _) = do
  putStrLn $ "view"
+ printUsage programName
  return ()
-action _ (command : _) = do
+action programName (command : _) = do
  putStrLn $ "Invalid command : " ++ command
+ printUsage programName
  return ()
+
+printUsage :: String -> IO ()
+printUsage = putStrLn . usage
 
 usage :: String -> String
 usage programName = unlines . map (programName ++) $
