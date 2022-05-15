@@ -24,5 +24,12 @@ devenv:
 rebuild-devenv: clean-devenv
 	make devenv
 
-.PHONY: clean-devenv devenv rebuild-devenv
+# Only the developer can execute it.
+# usage : $ make gitconfig KEY=<GitHub private key path>
+gitconfig:
+	$(DOCKER) cp $(KEY) $(DOCKER_CONTAINER_NAME):/root/SugoiH/ssh/github && \
+	make docker-start && \
+	$(DOCKER) exec -it $(DOCKER_CONTAINER_NAME) /root/SugoiH/git/gitconfig.sh
+
+.PHONY: clean-devenv devenv gitconfig rebuild-devenv
 
