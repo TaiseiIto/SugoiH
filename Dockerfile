@@ -25,8 +25,6 @@ RUN apk del tzdata
 WORKDIR /root
 RUN git clone https://github.com/TaiseiIto/SugoiH.git
 WORKDIR SugoiH
-# copy .bashrc
-COPY .bashrc /root/.bashrc
 
 ENTRYPOINT ["bash"]
 
