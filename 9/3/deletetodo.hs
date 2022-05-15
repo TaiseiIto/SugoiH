@@ -1,6 +1,8 @@
 {-# OPTIONS -Wall -Werror #-}
 
+import qualified Control.Exception
 import qualified Data.Map
+import qualified System.Directory
 import qualified System.IO
 
 main :: IO ()
@@ -17,5 +19,18 @@ main = do
  let
   number :: Int = read numberString
   newNumberedTasks = Data.Map.filterWithKey (\key _ -> key /= number) numberedTasks
- putStrLn . unlines . map (\key -> show key ++ " - " ++ newNumberedTasks Data.Map.! key) . Data.Map.keys $ newNumberedTasks
+ Control.Exception.bracketOnError
+  (System.IO.openTempFile "." "temp")
+  (
+   \(tempName, tempFile) -> do
+    System.IO.hClose tempFile
+    System.Directory.removeFile tempName
+  )
+  (
+   \(tempName, tempFile) -> do
+    System.IO.hPutStr tempFile . unlines . map (newNumberedTasks Data.Map.!) . Data.Map.keys $ newNumberedTasks
+    System.IO.hClose tempFile
+    System.Directory.removeFile "todo.txt"
+    System.Directory.renameFile tempName "todo.txt"
+  )
 
