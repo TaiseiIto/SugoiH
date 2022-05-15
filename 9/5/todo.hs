@@ -16,7 +16,7 @@ action programName [] = do
  printUsage programName
  return ()
 action _ ["add", fileName, todo] = do
- System.IO.appendFile fileName $ todo ++ "\n"
+ add fileName todo
  return ()
 action programName ("add" : arguments) = do
  putStrLn . invalidArgumentsMessage "add" $ arguments
@@ -34,6 +34,9 @@ action programName (command : _) = do
  putStrLn $ "Invalid command : " ++ command
  printUsage programName
  return ()
+
+add :: String -> String -> IO ()
+add fileName todo = System.IO.appendFile fileName $ todo ++ "\n"
 
 invalidArgumentsMessage :: String -> [String] -> String
 invalidArgumentsMessage command = ("Invalid " ++) . (command ++) . (" arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) ""
