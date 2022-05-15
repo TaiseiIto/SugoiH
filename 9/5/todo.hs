@@ -28,5 +28,10 @@ action _ (command : _) = do
  return ()
 
 usage :: String -> String
-usage programName = unlines . map (programName ++) $ [" add <file name> <todo>", " remove <file name> <todo number>", " view <file name>"]
+usage programName = unlines . map (programName ++) $
+ [
+  " add <file name> <todo>",
+  " remove <file name> <todo number>",
+  " view <file name>"
+ ]
 
