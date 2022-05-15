@@ -15,7 +15,6 @@ RUN apk add --no-cache curl
 RUN apk add --no-cache ghc
 RUN apk add --no-cache linux-headers
 RUN apk add --no-cache libffi-dev
-RUN apk add --no-cache llvm5
 RUN apk add --no-cache musl-dev
 RUN apk add --no-cache ncurses-dev
 RUN apk add --no-cache perl
