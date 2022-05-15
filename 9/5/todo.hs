@@ -36,7 +36,7 @@ action programName (command : _) = do
  return ()
 
 add :: String -> String -> IO ()
-add fileName todo = System.IO.appendFile fileName $ todo ++ "\n"
+add fileName = System.IO.appendFile fileName . (++ "\n")
 
 invalidArgumentsMessage :: String -> [String] -> String
 invalidArgumentsMessage command = ("Invalid " ++) . (command ++) . (" arguments :" ++) . foldl (\concatenated argument -> concatenated ++ " " ++ argument) ""
