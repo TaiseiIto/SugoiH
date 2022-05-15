@@ -4,24 +4,29 @@ import qualified System.Environment
 
 main :: IO ()
 main = do
+ programName <- System.Environment.getProgName
  commandLineArguments <- System.Environment.getArgs
- action commandLineArguments
+ action programName commandLineArguments
  return ()
 
-action :: [String] -> IO ()
-action [] = do
+action :: String -> [String] -> IO ()
+action programName [] = do
  putStrLn "No command"
+ putStrLn . usage $ programName
  return ()
-action ("add" : _) = do
+action _ ("add" : _) = do
  putStrLn $ "add"
  return ()
-action ("remove" : _) = do
+action _ ("remove" : _) = do
  putStrLn $ "remove"
  return ()
-action ("view" : _) = do
+action _ ("view" : _) = do
  putStrLn $ "view"
  return ()
-action (command : _) = do
+action _ (command : _) = do
  putStrLn $ "Invalid command : " ++ command
  return ()
+
+usage :: String -> String
+usage programName = unlines . map (programName ++) $ [" add <file name> <todo>", " remove <file name> <todo number>", " view <file name>"]
 
