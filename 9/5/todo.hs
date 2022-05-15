@@ -23,6 +23,9 @@ action programName ("add" : arguments) = do
  putStrLn . invalidArgumentsMessage "add" $ arguments
  printUsage programName
  return ()
+action _ ["remove", fileName, number] = do
+ remove fileName . (read :: String -> Int) $ number
+ return ()
 action programName ("remove" : arguments) = do
  putStrLn . invalidArgumentsMessage "remove" $ arguments
  printUsage programName
@@ -48,6 +51,12 @@ invalidArgumentsMessage command = ("Invalid " ++) . (command ++) . (" arguments 
 printUsage :: String -> IO ()
 printUsage = putStrLn . usage
 
+remove :: String -> Int -> IO ()
+remove fileName number = do
+ putStrLn $ "fileName = " ++ fileName
+ putStrLn $ "number = " ++ show number
+ return ()
+
 usage :: String -> String
 usage programName = unlines . map (programName ++) $
  [
@@ -61,4 +70,5 @@ view fileName = do
  fileContents <- System.IO.readFile fileName
  let numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
  putStrLn . Data.Map.foldlWithKey (\string key task -> string ++ show key ++ " - " ++ task ++ "\n") "" $ numberedTasks
+ return ()
 
