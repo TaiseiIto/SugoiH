@@ -55,14 +55,11 @@ add :: String -> String -> IO ()
 add fileName = System.IO.appendFile fileName . (++ "\n")
 
 bump :: String -> Int -> IO ()
-bump fileName number = do
- fileContents <- System.IO.readFile fileName
- let
-  numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
-  newNumberedTasks = Data.Map.foldlWithKey' (\tasks key task -> Data.Map.insert (bumpNewKey number key) task tasks) Data.Map.empty numberedTasks
-  newTasks = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") "" newNumberedTasks
- putStrLn newTasks
- return ()
+bump fileName number = rewrite fileName $ reassemble . bumpTask . disassemble
+ where
+  disassemble = Data.Map.fromList . zip ([0..] :: [Int]) . lines
+  bumpTask = Data.Map.foldlWithKey' (\tasks key task -> Data.Map.insert (bumpNewKey number key) task tasks) Data.Map.empty
+  reassemble = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") ""
 
 bumpNewKey :: Int -> Int -> Int
 bumpNewKey number key
