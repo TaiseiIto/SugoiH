@@ -60,7 +60,7 @@ remove fileName number = do
   numberedTasks = Data.Map.fromList . zip ([0..] :: [Int]) . lines $ fileContents
   newNumberedTasks = Data.Map.filterWithKey (\key _ -> key /= number) numberedTasks
   newTasks = Data.Map.foldl' (\tasks task -> tasks ++ task ++ "\n") "" newNumberedTasks
- Control.Exception.bracket
+ Control.Exception.bracketOnError
   (System.IO.openTempFile "." "temp")
   (
    \(tempName, tempFile) -> do
