@@ -1,3 +1,5 @@
+DIRECTORIES=$(shell find . | grep -E "^\./[0-9]/Makefile$$" | cut -f 2 -d "/")
+
 DOCKER = docker
 DOCKER_IMAGE = sugoih
 DOCKER_IMAGE_TAG = latest
@@ -14,6 +16,9 @@ DELIMITER = /
 SCRIPT_PREFIX = ./
 SCRIPT_SUFFIX = .sh
 endif
+
+all:
+	$(foreach DIRECTORY, $(DIRECTORIES), make -C $(DIRECTORY);)
 
 clean-env:
 	$(SCRIPT_PREFIX)script$(DELIMITER)clean-env$(SCRIPT_SUFFIX) $(DOCKER) $(DOCKER_IMAGE) $(DOCKER_CONTAINER)
