@@ -37,7 +37,6 @@ RUN apk del tzdata
 # clone the repository
 WORKDIR /root
 RUN git clone https://github.com/TaiseiIto/SugoiH.git
-RUN chmod u+x /root/SugoiH/git/gitconfig.sh
 WORKDIR SugoiH
 RUN make
 
