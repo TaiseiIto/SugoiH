@@ -2,9 +2,10 @@ DIRECTORIES=$(shell ls -l | grep ^d | awk '{print $$9}')
 SOURCES=$(wildcard *.hs)
 TARGETS=$(SOURCES:.hs=)
 
-all: directories $(TARGETS)
+all: $(TARGETS)
 
 clean:
+	$(foreach DIRECTORY, $(DIRECTORIES), make $@ -C $(DIRECTORY);)
 	rm $(TARGETS) *.hi *.o
 
 directories:
@@ -13,7 +14,7 @@ directories:
 rebuild: clean
 	make
 
-$(TARGETS): $(@:=.hs)
+$(TARGETS): directories $(@:=.hs)
 
 %: %.hs
 	ghc $^

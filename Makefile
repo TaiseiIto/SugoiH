@@ -20,11 +20,17 @@ endif
 all:
 	$(foreach DIRECTORY, $(DIRECTORIES), make -C $(DIRECTORY);)
 
+clean:
+	$(foreach DIRECTORY, $(DIRECTORIES), make $@ -C $(DIRECTORY);)
+
 clean-env:
 	$(SCRIPT_PREFIX)script$(DELIMITER)clean-env$(SCRIPT_SUFFIX) $(DOCKER) $(DOCKER_IMAGE) $(DOCKER_CONTAINER)
 
 env:
 	$(SCRIPT_PREFIX)script$(DELIMITER)env$(SCRIPT_SUFFIX) $(DOCKER) $(DOCKER_IMAGE) $(DOCKER_IMAGE_TAG) $(DOCKER_CONTAINER)
+
+rebuild:
+	$(foreach DIRECTORY, $(DIRECTORIES), make $@ -C $(DIRECTORY);)
 
 rebuild-env: clean-env
 	make env
