@@ -17,7 +17,7 @@ main = do
  putStr "Which one do you want to delete? : "
  numberString <- getLine
  let
-  number :: Int = read numberString
+  number = (read :: String -> Int) numberString
   newNumberedTasks = Data.Map.filterWithKey (\key _ -> key /= number) numberedTasks
  Control.Exception.bracketOnError
   (System.IO.openTempFile "." "temp")
