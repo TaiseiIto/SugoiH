@@ -4,7 +4,7 @@ TARGETS=$(SOURCES:.hs=)
 all: $(TARGETS)
 
 clean:
-	rm *.hi *.o
+	rm $(TARGETS) *.hi *.o
 
 rebuild: clean
 	make
