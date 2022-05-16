@@ -1,16 +1,16 @@
 SOURCES=$(wildcard *.hs)
-TARGETS=$(SOURCES:.hs=.exe)
+TARGETS=$(SOURCES:.hs=)
 
 all: $(TARGETS)
 
 clean:
-	del *.exe *.hi *.o
+	rm $(TARGETS) *.hi *.o
 
 rebuild: clean
 	make
 
-$(TARGETS): $(@:.exe=.hs)
+$(TARGETS): $(@:=.hs)
 
-%.exe: %.hs
+%: %.hs
 	ghc $^
 
