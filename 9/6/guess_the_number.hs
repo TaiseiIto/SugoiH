@@ -26,16 +26,16 @@ askForNumbers (number : futureNumbers) = do
   "" -> return ()
   _  -> case (reads :: String -> [(Int, String)]) input of
    [(guessedNumber, _)]
-     | number <  guessedNumber -> do
-      putStrLn . ("Less than " ++) . show $ guessedNumber
-      askForNumbers (number : futureNumbers)
-     | number == guessedNumber -> do
-      putStrLn "Correct!"
-      askForNumbers futureNumbers
-     | guessedNumber < number  -> do
-      putStrLn . ("Greater than " ++) . show $ guessedNumber
-      askForNumbers (number : futureNumbers)
-   _                    -> do
+    | number <  guessedNumber -> do
+     putStrLn . ("Less than " ++) . show $ guessedNumber
+     askForNumbers (number : futureNumbers)
+    | number == guessedNumber -> do
+     putStrLn "Correct!"
+     askForNumbers futureNumbers
+    | guessedNumber < number  -> do
+     putStrLn . ("Greater than " ++) . show $ guessedNumber
+     askForNumbers (number : futureNumbers)
+   _                          -> do
     cantParse input
     askForNumbers (number : futureNumbers)
  return ()
