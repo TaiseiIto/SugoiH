@@ -41,11 +41,11 @@ askForNumbers (number : futureNumbers) = do
  return ()
 
 cantParse :: String -> IO ()
-cantParse string = putStrLn . ("Can't parse " ++) . (string ++) $ " as Int."
+cantParse = putStrLn . ("Can't parse \"" ++) . (++ "\" as Int.")
 
 printUsage :: IO ()
 printUsage = do
  progName <- System.Environment.getProgName
  putStrLn "Usage"
- putStrLn . ("$ " ++) . (progName ++) $ "<max absolute number>"
+ putStrLn . ("$ ./" ++) . (progName ++) $ " <max absolute number>"
 
