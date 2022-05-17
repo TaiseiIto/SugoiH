@@ -11,8 +11,9 @@ main = do
  args <- System.Environment.getArgs
  randGen <- System.Random.getStdGen
  case args of
-  [_] -> do
-   askForNumbers . (System.Random.randomRs :: (Int, Int) -> System.Random.StdGen -> [Int]) (-10000, 10000) $ randGen
+  [arg] -> case (reads :: String -> [(Int, String)]) arg of
+   [(maxAbs, _)] -> askForNumbers . (System.Random.randomRs :: (Int, Int) -> System.Random.StdGen -> [Int]) (-maxAbs, maxAbs) $ randGen
+   _ -> putStrLn . ("Can't parse " ++) . (arg ++) $ " as Int."
   _ -> printUsage
  return ()
 
