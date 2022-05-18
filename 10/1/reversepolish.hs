@@ -7,15 +7,13 @@ data Element =
  Sub |
  Mul |
  Div |
- Val Float |
- Nul
+ Val Float
 
 instance Read Element where
  readsPrec _ ('+' : remain) = [(Add, remain)]
  readsPrec _ ('-' : remain) = [(Sub, remain)]
  readsPrec _ ('*' : remain) = [(Mul, remain)]
  readsPrec _ ('/' : remain) = [(Div, remain)]
- readsPrec _ ('?' : remain) = [(Nul, remain)]
  readsPrec _ string = case (reads :: String -> [(Float, String)]) string of
   (val, remain) : _ -> [(Val val, remain)]
   _                 -> []
@@ -26,7 +24,6 @@ instance Show Element where
  show Mul = "*"
  show Div = "/"
  show (Val val) = show val
- show Nul = "?"
 
 main :: IO ()
 main = do
