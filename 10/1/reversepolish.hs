@@ -11,7 +11,6 @@ data Element =
  Sub |
  Mul |
  Div |
- Nul |
  Val Float
 
 instance Read Element where
@@ -19,7 +18,6 @@ instance Read Element where
  readsPrec _ ('-' : remain) = [(Sub, remain)]
  readsPrec _ ('*' : remain) = [(Mul, remain)]
  readsPrec _ ('/' : remain) = [(Div, remain)]
- readsPrec _ ('?' : remain) = [(Nul, remain)]
  readsPrec _ string = case (reads :: String -> [(Float, String)]) string of
   (val, remain) : _ -> [(Val val, remain)]
   _                 -> []
@@ -29,7 +27,6 @@ instance Show Element where
  show Sub = "-"
  show Mul = "*"
  show Div = "/"
- show Nul = "?"
  show (Val val) = show val
 
 main :: IO ()
@@ -39,15 +36,13 @@ main = do
  return ()
 
 solve :: [Element] -> Element
-solve []                = Nul
-solve [Val val]         = Val val
-solve (element : stack) = solve . step element $ stack
+solve = head . foldl step []
 
-step :: Element -> [Element] -> [Element]
-step Add (Val a : Val b : stack) = Val (a + b) : stack
-step Sub (Val a : Val b : stack) = Val (a - b) : stack
-step Mul (Val a : Val b : stack) = Val (a * b) : stack
-step Div (Val a : Val b : stack) = Val (a / b) : stack
-step (Val val) stack = Val val : stack
-step _ _ = [Nul]
+step :: [Element] -> Element -> [Element]
+step (Val a : Val b : stack) Add = Val (a + b) : stack
+step (Val a : Val b : stack) Sub = Val (a - b) : stack
+step (Val a : Val b : stack) Mul = Val (a * b) : stack
+step (Val a : Val b : stack) Div = Val (a / b) : stack
+step stack (Val val) = Val val : stack
+step _ _ = []
 
