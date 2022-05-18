@@ -39,10 +39,10 @@ solve :: [Element] -> Element
 solve = head . foldl step []
 
 step :: [Element] -> Element -> [Element]
-step (Val a : Val b : stack) Add = Val (a + b) : stack
-step (Val a : Val b : stack) Sub = Val (a - b) : stack
-step (Val a : Val b : stack) Mul = Val (a * b) : stack
-step (Val a : Val b : stack) Div = Val (a / b) : stack
+step (Val a : Val b : stack) Add = Val (b + a) : stack
+step (Val a : Val b : stack) Sub = Val (b - a) : stack
+step (Val a : Val b : stack) Mul = Val (b * a) : stack
+step (Val a : Val b : stack) Div = Val (b / a) : stack
 step stack (Val val) = Val val : stack
 step _ _ = []
 
