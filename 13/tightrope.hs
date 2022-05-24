@@ -29,4 +29,10 @@ main = do
  putStrLn . show $ return (0, 0) >>= landRight 2 >>= landLeft 2 >>= landRight 2
  putStrLn . show $ return (0, 0) >>= landLeft 1 >>= landRight 4 >>= landLeft (-1) >>= landRight (-2)
  putStrLn . show $ return (0, 0) >>= landLeft 1 >>= banana >>= landRight 1
+ putStrLn . show $ do
+  start  <- return (0, 0)
+  first  <- landLeft  2 start
+  second <- landRight 2 first
+  end    <- landLeft  1 second
+  return end
 
