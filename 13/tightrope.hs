@@ -35,4 +35,11 @@ main = do
   second <- landRight 2 first
   end    <- landLeft  1 second
   return end
+ putStrLn . show $ do
+  start  <- return (0, 0)
+  first  <- landLeft  2 start
+  _      <- Nothing
+  second <- landRight 2 first
+  end    <- landLeft  1 second
+  return end
 
