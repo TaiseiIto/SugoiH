@@ -3,15 +3,25 @@
 type Birds = Int
 type Pole  = (Birds, Birds)
 
-landLeft :: Birds -> Pole -> Pole
-landLeft n (left, right) = (left + n, right)
+landLeft :: Birds -> Pole -> Maybe Pole
+landLeft n (left, right)
+ | difference < 4 = Just (nextLeft, nextRight)
+ | otherwise      = Nothing
+ where
+  nextLeft   = left + n
+  nextRight  = right
+  difference = abs $ nextLeft - nextRight
 
-landRight :: Birds -> Pole -> Pole
-landRight n (left, right) = (left, right + n)
+landRight :: Birds -> Pole -> Maybe Pole
+landRight n (left, right)
+ | difference < 4 = Just (nextLeft, nextRight)
+ | otherwise      = Nothing
+ where
+  nextLeft   = left
+  nextRight  = right + n
+  difference = abs $ nextLeft - nextRight
 
 main :: IO ()
 main = do
- putStrLn . show . landLeft 2 $ (0, 0)
- putStrLn . show . landRight 1 $ (1, 2)
- putStrLn . show . landRight (-1) $ (1, 2)
+ putStrLn . show $ return (0, 0) >>= landRight 2 >>= landLeft 2 >>= landRight 2
 
