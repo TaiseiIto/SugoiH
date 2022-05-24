@@ -3,6 +3,9 @@
 type Birds = Int
 type Pole  = (Birds, Birds)
 
+banana :: Pole -> Maybe Pole
+banana _ = Nothing
+
 landLeft :: Birds -> Pole -> Maybe Pole
 landLeft n (left, right)
  | difference < 4 = Just (nextLeft, nextRight)
@@ -24,4 +27,6 @@ landRight n (left, right)
 main :: IO ()
 main = do
  putStrLn . show $ return (0, 0) >>= landRight 2 >>= landLeft 2 >>= landRight 2
+ putStrLn . show $ return (0, 0) >>= landLeft 1 >>= landRight 4 >>= landLeft (-1) >>= landRight (-2)
+ putStrLn . show $ return (0, 0) >>= landLeft 1 >>= banana >>= landRight 1
 
