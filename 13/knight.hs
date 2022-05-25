@@ -11,7 +11,7 @@ main = do
  putStrLn . show $ (6, 2) `canReachIn3` (7, 3)
 
 canReachIn3 :: KnightPos -> KnightPos -> [KnightRoute]
-canReachIn3 start end = filter ((== end) . head) . step3 $ start
+canReachIn3 start end = map reverse . filter ((== end) . head) . step3 $ start
 
 moveKnight :: KnightPos -> [KnightPos]
 moveKnight (c, r) = do
@@ -35,7 +35,7 @@ step :: KnightRoute -> [KnightRoute]
 step []       = []
 step (p : ps) = do
  newPos <- moveKnight p
- return (newPos : (p : ps))
+ return . (newPos :) . (p :) $ ps
 
 step3 :: KnightPos -> [KnightRoute]
 step3 pos = do
