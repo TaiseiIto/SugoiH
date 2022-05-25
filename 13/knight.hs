@@ -5,7 +5,19 @@ import qualified Control.Monad
 type KnightPos = (Int, Int)
 
 main :: IO ()
-main = putStrLn . show . moveKnight $ (6, 2)
+main = do
+ putStrLn . show $ (6, 2) `canReachIn3` (6, 1)
+ putStrLn . show $ (6, 2) `canReachIn3` (7, 3)
+
+canReachIn3 :: KnightPos -> KnightPos -> Bool
+canReachIn3 = flip elem . in3
+
+in3 :: KnightPos -> [KnightPos]
+in3 start = do
+ first  <- moveKnight start
+ second <- moveKnight first
+ third  <- moveKnight second
+ return third
 
 moveKnight :: KnightPos -> [KnightPos]
 moveKnight (c, r) = do
