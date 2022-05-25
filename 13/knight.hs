@@ -2,22 +2,16 @@
 
 import qualified Control.Monad
 
-type KnightPos = (Int, Int)
+type KnightPos   = (Int, Int)
+type KnightRoute = [KnightPos]
 
 main :: IO ()
 main = do
  putStrLn . show $ (6, 2) `canReachIn3` (6, 1)
  putStrLn . show $ (6, 2) `canReachIn3` (7, 3)
 
-canReachIn3 :: KnightPos -> KnightPos -> Bool
-canReachIn3 = flip elem . in3
-
-in3 :: KnightPos -> [KnightPos]
-in3 start = do
- first  <- moveKnight start
- second <- moveKnight first
- third  <- moveKnight second
- return third
+canReachIn3 :: KnightPos -> KnightPos -> [KnightRoute]
+canReachIn3 start end = filter ((== end) . head) . step3 $ start
 
 moveKnight :: KnightPos -> [KnightPos]
 moveKnight (c, r) = do
@@ -36,4 +30,17 @@ moveKnight (c, r) = do
   ]
  Control.Monad.guard $ (c', r') == (cRange, rRange)
  return (c', r')
+
+step :: KnightRoute -> [KnightRoute]
+step []       = []
+step (p : ps) = do
+ newPos <- moveKnight p
+ return (newPos : (p : ps))
+
+step3 :: KnightPos -> [KnightRoute]
+step3 pos = do
+ first  <- step . return $ pos
+ second <- step first
+ third  <- step second
+ return third
 
