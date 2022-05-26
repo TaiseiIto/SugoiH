@@ -12,7 +12,7 @@ fromDiffList :: DiffList a -> [a]
 fromDiffList = ($ []) . getDiffList
 
 instance Semigroup (DiffList a) where
- x <> y = (DiffList .) ((. getDiffList) (getDiffList x .) ) $ y
+ (<>) = (DiffList .) . (. getDiffList) . (.) . getDiffList
 
 instance Monoid (DiffList a) where
  mempty  = DiffList id
