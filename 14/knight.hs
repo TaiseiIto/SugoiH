@@ -7,11 +7,11 @@ type KnightRoute = [KnightPos]
 
 main :: IO ()
 main = do
- putStrLn . show $ (6, 2) `canReachIn3` (6, 1)
- putStrLn . show $ (6, 2) `canReachIn3` (7, 3)
+ putStrLn . show $ canReachIn 3 (6, 2) (6, 1)
+ putStrLn . show $ canReachIn 3 (6, 2) (7, 3)
 
-canReachIn3 :: KnightPos -> KnightPos -> [KnightRoute]
-canReachIn3 start end = map reverse . filter ((== end) . head) . step3 $ start
+canReachIn :: Int -> KnightPos -> KnightPos -> [KnightRoute]
+canReachIn time start end = map reverse . filter ((== end) . head) . steps time $ start
 
 moveKnight :: KnightPos -> [KnightPos]
 moveKnight (c, r) = do
@@ -37,10 +37,6 @@ step (p : ps) = do
  newPos <- moveKnight p
  return . (newPos :) . (p :) $ ps
 
-step3 :: KnightPos -> [KnightRoute]
-step3 pos = do
- first  <- step . return $ pos
- second <- step first
- third  <- step second
- return third
+steps :: Int -> KnightPos -> [KnightRoute]
+steps time start = return [start] >>= foldr (Control.Monad.<=<) return (replicate time step)
 
