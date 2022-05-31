@@ -3,22 +3,22 @@
 type Birds = Int
 type Pole  = (Birds, Birds)
 
-banana :: Pole -> Maybe Pole
-banana _ = Nothing
+banana :: Pole -> Either String Pole
+banana _ = Left "banana!"
 
-landLeft :: Birds -> Pole -> Maybe Pole
+landLeft :: Birds -> Pole -> Either String Pole
 landLeft n (left, right)
- | difference < 4 = Just (nextLeft, nextRight)
- | otherwise      = Nothing
+ | difference < 4 = Right (nextLeft, nextRight)
+ | otherwise      = Left $ "left = " ++ show left ++ ", right = " ++ show right ++ ", fell down."
  where
   nextLeft   = left + n
   nextRight  = right
   difference = abs $ nextLeft - nextRight
 
-landRight :: Birds -> Pole -> Maybe Pole
+landRight :: Birds -> Pole -> Either String Pole
 landRight n (left, right)
- | difference < 4 = Just (nextLeft, nextRight)
- | otherwise      = Nothing
+ | difference < 4 = Right (nextLeft, nextRight)
+ | otherwise      = Left $ "left = " ++ show left ++ ", right = " ++ show right ++ ", fell down."
  where
   nextLeft   = left
   nextRight  = right + n
@@ -38,7 +38,7 @@ main = do
  putStrLn . show $ do
   start  <- return (0, 0)
   first  <- landLeft  2 start
-  _      <- Nothing
+  _      <- Left "fell down deliberately."
   second <- landRight 2 first
   end    <- landLeft  1 second
   return end
