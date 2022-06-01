@@ -19,9 +19,10 @@ find x (Prob ((y, p) : ys)) = if x == y
 
 unite :: Eq a => Prob a -> Prob a
 unite (Prob [])            = Prob []
-unite (Prob ((x, p) : xs)) = Prob $ let unitedxs = unite (Prob xs) in case find x unitedxs of
- Just (_, q) -> ((x, p + q) :) . getProb . delete x $ unitedxs
- Nothing     -> ((x, p) :) . getProb $ unitedxs
+unite (Prob ((x, p) : xs)) = Prob $ let unitedxs = unite . Prob $ xs
+ in case find x unitedxs of
+  Just (_, q) -> ((x, p + q) :) . getProb . delete x $ unitedxs
+  Nothing     -> ((x, p) :) . getProb $ unitedxs
 
 instance Functor Prob where
  fmap f x = Prob [(f y, p) | (y, p) <- getProb x]
