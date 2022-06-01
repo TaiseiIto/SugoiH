@@ -1,4 +1,3 @@
-{-# LANGUAGE GADTs, StandaloneDeriving #-}
 {-# OPTIONS -Wall -Werror #-}
 
 import Data.Ratio
