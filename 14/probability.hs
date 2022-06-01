@@ -5,7 +5,7 @@ import Data.Ratio
 newtype Prob a = Prob {getProb :: [(a, Rational)]} deriving Show
 
 instance Functor Prob where
- fmap f = Prob . map (\(x, p) -> (f x, p)) . getProb
+ fmap f x = Prob [(f y, p) | (y, p) <- getProb x]
 
 flatten :: Prob (Prob a) -> Prob a
 flatten = Prob . concat . map (\(Prob ps, p) -> map (\(x, q) -> (x, p * q)) ps) . getProb
