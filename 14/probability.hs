@@ -1,8 +1,27 @@
+{-# LANGUAGE GADTs, StandaloneDeriving #-}
 {-# OPTIONS -Wall -Werror #-}
 
 import Data.Ratio
 
 newtype Prob a = Prob {getProb :: [(a, Rational)]} deriving Show
+
+delete :: Eq a => a -> [(a, Rational)] -> [(a, Rational)]
+delete _ [] = []
+delete x ((y, p) : ys) = if x == y
+ then delete x ys
+ else (y, p) : delete x ys
+
+find :: Eq a => a -> [(a, Rational)] -> Maybe (a, Rational)
+find _ [] = Nothing
+find x ((y, p) : ys) = if x == y
+ then Just (y, p)
+ else find x ys
+
+unite :: Eq a => Prob a -> Prob a
+unite (Prob [])            = Prob []
+unite (Prob ((x, p) : xs)) = Prob $ case find x xs of
+ Just (_, q) -> (x, p + q) : delete x xs
+ Nothing     -> (x, p) : xs
 
 instance Functor Prob where
  fmap f x = Prob [(f y, p) | (y, p) <- getProb x]
@@ -11,12 +30,12 @@ flatten :: Prob (Prob a) -> Prob a
 flatten = Prob . concat . map (\(Prob ps, p) -> map (\(x, q) -> (x, p * q)) ps) . getProb
 
 instance Applicative Prob where
- pure x = Prob [(x, 1 % 1)]
+ pure x  = Prob [(x, 1 % 1)]
  f <*> x = Prob [(g y, p * q) | (g, p) <- getProb f, (y, q) <- getProb x]
 
 instance Monad Prob where
  return x = Prob [(x, 1 % 1)]
- m >>= f = flatten . fmap f $ m
+ m >>= f  = flatten . fmap f $ m
 
 data Coin = Heads | Tails deriving (Show, Eq)
 
@@ -27,7 +46,7 @@ loadedCoin :: Prob Coin
 loadedCoin = Prob [(Heads, 1 % 10), (Tails, 9 % 10)]
 
 flipThree :: Prob Bool
-flipThree = do
+flipThree = unite $ do
  a <- coin
  b <- coin
  c <- loadedCoin
