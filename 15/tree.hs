@@ -14,7 +14,7 @@ numbers :: Int -> [Int]
 numbers = reverse . reverseNumbers
 
 numberLevel :: Int -> Int
-numberLevel = (floor :: Double -> Int) . logBase 2 . fromIntegral
+numberLevel = (floor :: Double -> Int) . logBase 2 . fromIntegral . (+ 1)
 
 numberString :: String -> [(Int, Char)]
 numberString string = zip (numbers . length $ string) string
@@ -27,6 +27,5 @@ numberString string = zip (numbers . length $ string) string
 -- completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
 
 main :: IO ()
-main = do
- putStrLn . show . map (numberLevel . fst) . numberString $ "POLLYWANTSACRAC"
+main = putStrLn . show . map (numberLevel . fst) . numberString $ "POLLYWANTSACRAC"
 
