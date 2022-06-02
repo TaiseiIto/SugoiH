@@ -8,7 +8,11 @@ data Tree a =
 reverseNumbers :: Int -> [Int]
 reverseNumbers n
  | n <= 0    = []
- | otherwise = let m = n - 1 in (m :) . reverseNumbers $ m
+ | otherwise =
+  let
+   m = n - 1
+  in
+   (m :) . reverseNumbers $ m
 
 numbers :: Int -> [Int]
 numbers = reverse . reverseNumbers
@@ -17,7 +21,11 @@ rowInTree :: Int -> Int
 rowInTree = (floor :: Double -> Int) . logBase 2 . fromIntegral . (+ 1)
 
 columnInTree :: Int -> Int
-columnInTree n = let row = rowInTree n in n - 2 ^ row + 1
+columnInTree n =
+ let
+  row = rowInTree n
+ in
+  n - 2 ^ row + 1
 
 isLeftInTree :: Int -> Bool
 isLeftInTree n
