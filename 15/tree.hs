@@ -47,6 +47,9 @@ completeBinaryTree :: String -> Tree Char
 completeBinaryTree [] = Empty
 completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
 
+freeTree :: Tree Char
+freeTree = completeBinaryTree "POLLYWANTSACRAC"
+
 main :: IO ()
-main = putStrLn . show . completeBinaryTree $ "POLLYWANTSACRAC"
+main = putStrLn . show $ freeTree
 
