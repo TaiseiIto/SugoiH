@@ -34,33 +34,33 @@ isRightInTree n
  | n == 0    = False
  | otherwise = not . isLeftInTree $ n
 
-numberString :: String -> [(Int, Char)]
-numberString string = zip (numbers . length $ string) string
+numberElement :: [a] -> [(Int, a)]
+numberElement xs = zip (numbers . length $ xs) xs
 
-leftString :: String -> String
-leftString = map snd . filter (isLeftInTree . fst) . numberString
+leftList :: [a] -> [a]
+leftList = map snd . filter (isLeftInTree . fst) . numberElement
 
-rightString :: String -> String
-rightString = map snd . filter (isRightInTree . fst) . numberString
+rightList :: [a] -> [a]
+rightList = map snd . filter (isRightInTree . fst) . numberElement
 
-string2Tree :: String -> Tree Char
-string2Tree [] = Empty
-string2Tree (c : cs) = Node c (string2Tree . leftString $ c : cs) (string2Tree . rightString $ c : cs)
+list2Tree :: [a] -> Tree a
+list2Tree [] = Empty
+list2Tree (x : xs) = Node x (list2Tree . leftList $ x : xs) (list2Tree . rightList $ x : xs)
 
 freeTree :: Tree Char
-freeTree = string2Tree "POLLYWANTSACRAC"
+freeTree = list2Tree "POLLYWANTSACRAC"
 
 data Direction  = L | R deriving Show
 type Directions = [Direction]
 
-changeChar :: Tree Char -> Directions -> Char -> Tree Char
-changeChar Empty _ _               = Empty
-changeChar (Node x l r) (L : ds) c = Node x (changeChar l ds c) r
-changeChar (Node x l r) (R : ds) c = Node x l (changeChar r ds c)
-changeChar (Node _ l r) [] c       = Node c l r
+changeElement :: Tree a -> Directions -> a -> Tree a
+changeElement Empty _ _               = Empty
+changeElement (Node x l r) (L : ds) y = Node x (changeElement l ds y) r
+changeElement (Node x l r) (R : ds) y = Node x l (changeElement r ds y)
+changeElement (Node _ l r) [] y       = Node y l r
 
 newTree :: Tree Char
-newTree = changeChar freeTree [R, L] 'P'
+newTree = changeElement freeTree [R, L] 'P'
 
 main :: IO ()
 main = putStrLn . show $ newTree
