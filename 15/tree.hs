@@ -7,8 +7,8 @@
 
 reverseNumbers :: Int -> [Int]
 reverseNumbers n
- | n < 0     = []
- | otherwise = (n :) . reverseNumbers $ n - 1
+ | n <= 0    = []
+ | otherwise = let m = n - 1 in (m :) . reverseNumbers $ m
 
 numbers :: Int -> [Int]
 numbers = reverse . reverseNumbers
