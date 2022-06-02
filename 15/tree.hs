@@ -29,6 +29,11 @@ isLeftInTree n
   in
    column < 2 ^ (row - 1)
 
+isRightInTree :: Int -> Bool
+isRightInTree n
+ | n == 0    = False
+ | otherwise = not . isLeftInTree $ n
+
 numberString :: String -> [(Int, Char)]
 numberString string = zip (numbers . length $ string) string
 
@@ -40,5 +45,5 @@ numberString string = zip (numbers . length $ string) string
 -- completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
 
 main :: IO ()
-main = putStrLn . show . map (isLeftInTree . fst) . numberString $ "POLLYWANTSACRAC"
+main = putStrLn . show . map (isRightInTree . fst) . numberString $ "POLLYWANTSACRAC"
 
