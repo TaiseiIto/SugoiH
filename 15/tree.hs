@@ -43,12 +43,12 @@ leftString = map snd . filter (isLeftInTree . fst) . numberString
 rightString :: String -> String
 rightString = map snd . filter (isRightInTree . fst) . numberString
 
-completeBinaryTree :: String -> Tree Char
-completeBinaryTree [] = Empty
-completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
+string2Tree :: String -> Tree Char
+string2Tree [] = Empty
+string2Tree (c : cs) = Node c (string2Tree . leftString $ c : cs) (string2Tree . rightString $ c : cs)
 
 freeTree :: Tree Char
-freeTree = completeBinaryTree "POLLYWANTSACRAC"
+freeTree = string2Tree "POLLYWANTSACRAC"
 
 data Direction  = L | R deriving Show
 type Directions = [Direction]
