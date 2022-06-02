@@ -43,9 +43,9 @@ leftList = map snd . filter (isLeftInTree . fst) . numberList
 rightList :: [a] -> [a]
 rightList = map snd . filter (isRightInTree . fst) . numberList
 
-list2Tree :: [a] -> Tree a
-list2Tree [] = Empty
-list2Tree (x : xs) = Node x (list2Tree . leftList $ x : xs) (list2Tree . rightList $ x : xs)
+list2tree :: [a] -> Tree a
+list2tree [] = Empty
+list2tree (x : xs) = Node x (list2tree . leftList $ x : xs) (list2tree . rightList $ x : xs)
 
 numberSubTree :: Int -> Tree a -> Tree (Int, a)
 numberSubTree _ Empty        = Empty
@@ -53,6 +53,13 @@ numberSubTree n (Node x l r) = Node (n, x) (numberSubTree (2 * n + 1) l) (number
 
 numberTree :: Tree a -> Tree (Int, a)
 numberTree = numberSubTree 0
+
+flattenTree :: Tree a -> [a]
+flattenTree Empty = []
+flattenTree (Node x l r) = x : (flattenTree l ++ flattenTree r)
+
+-- tree2list :: Tree a -> [a]
+-- tree2list = flattenTree . numberTree
 
 data Direction  = L | R deriving Show
 type Directions = [Direction]
@@ -64,11 +71,11 @@ changeElement (Node x l r) (R : ds) y = Node x l (changeElement r ds y)
 changeElement (Node _ l r) [] y       = Node y l r
 
 freeTree :: Tree Char
-freeTree = list2Tree "POLLYWANTSACRAC"
+freeTree = list2tree "POLLYWANTSACRAC"
 
 newTree :: Tree Char
 newTree = changeElement freeTree [R, L] 'P'
 
 main :: IO ()
-main = putStrLn . show . numberTree $ newTree
+main = putStrLn . show . flattenTree . numberTree $ newTree
 
