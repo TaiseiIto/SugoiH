@@ -13,6 +13,9 @@ reverseNumbers n
 numbers :: Int -> [Int]
 numbers = reverse . reverseNumbers
 
+numberString :: String -> [(Int, Char)]
+numberString string = zip (numbers . length $ string) string
+
 -- leftString :: String -> String
 -- rightString :: String -> String
 
@@ -21,5 +24,5 @@ numbers = reverse . reverseNumbers
 -- completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
 
 main :: IO ()
-main = putStrLn . show . numbers $ 10
+main = putStrLn . show . numberString $ "POLLYWANTSACRAC"
 
