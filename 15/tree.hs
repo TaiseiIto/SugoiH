@@ -19,6 +19,16 @@ rowInTree = (floor :: Double -> Int) . logBase 2 . fromIntegral . (+ 1)
 columnInTree :: Int -> Int
 columnInTree n = let row = rowInTree n in n - 2 ^ row + 1
 
+isLeftInTree :: Int -> Bool
+isLeftInTree n
+ | n == 0    = False
+ | otherwise =
+  let
+   row    = rowInTree    n
+   column = columnInTree n
+  in
+   column < 2 ^ (row - 1)
+
 numberString :: String -> [(Int, Char)]
 numberString string = zip (numbers . length $ string) string
 
@@ -30,5 +40,5 @@ numberString string = zip (numbers . length $ string) string
 -- completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
 
 main :: IO ()
-main = putStrLn . show . map (columnInTree . fst) . numberString $ "POLLYWANTSACRAC"
+main = putStrLn . show . map (isLeftInTree . fst) . numberString $ "POLLYWANTSACRAC"
 
