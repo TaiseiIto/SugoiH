@@ -1,9 +1,9 @@
 {-# OPTIONS -Wall -Werror #-}
 
--- data Tree a =
---  Empty |
---  Node a (Tree a) (Tree a)
---  deriving Show
+data Tree a =
+ Empty |
+ Node a (Tree a) (Tree a)
+ deriving Show
 
 reverseNumbers :: Int -> [Int]
 reverseNumbers n
@@ -37,13 +37,16 @@ isRightInTree n
 numberString :: String -> [(Int, Char)]
 numberString string = zip (numbers . length $ string) string
 
--- leftString :: String -> String
--- rightString :: String -> String
+leftString :: String -> String
+leftString = map snd . filter (isLeftInTree . fst) . numberString
 
--- completeBinaryTree :: String -> Tree Char
--- completeBinaryTree [] = Empty
--- completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
+rightString :: String -> String
+rightString = map snd . filter (isRightInTree . fst) . numberString
+
+completeBinaryTree :: String -> Tree Char
+completeBinaryTree [] = Empty
+completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
 
 main :: IO ()
-main = putStrLn . show . map (isRightInTree . fst) . numberString $ "POLLYWANTSACRAC"
+main = putStrLn . show . completeBinaryTree $ "POLLYWANTSACRAC"
 
