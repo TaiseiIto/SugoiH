@@ -58,8 +58,12 @@ flattenTree :: Tree a -> [a]
 flattenTree Empty = []
 flattenTree (Node x l r) = x : (flattenTree l ++ flattenTree r)
 
--- tree2list :: Tree a -> [a]
--- tree2list = flattenTree . numberTree
+sortWithFirst :: Ord a => [(a, b)] -> [(a, b)]
+sortWithFirst [] = []
+sortWithFirst ((i, x) : ixs) = sortWithFirst [forward | forward <- ixs, fst forward < i] ++ [(i, x)] ++ sortWithFirst [backward | backward <- ixs, i <= fst backward]
+
+tree2list :: Tree a -> [a]
+tree2list = map snd . sortWithFirst . flattenTree . numberTree
 
 data Direction  = L | R deriving Show
 type Directions = [Direction]
@@ -77,5 +81,5 @@ newTree :: Tree Char
 newTree = changeElement freeTree [R, L] 'P'
 
 main :: IO ()
-main = putStrLn . show . flattenTree . numberTree $ newTree
+main = putStrLn . show . tree2list $ newTree
 
