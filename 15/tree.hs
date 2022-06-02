@@ -66,12 +66,12 @@ flattenTree :: Tree a -> [a]
 flattenTree Empty = []
 flattenTree (Node x l r) = x : (flattenTree l ++ flattenTree r)
 
-sortWithFirst :: Ord a => [(a, b)] -> [(a, b)]
-sortWithFirst [] = []
-sortWithFirst ((i, x) : ixs) = sortWithFirst [forward | forward <- ixs, fst forward < i] ++ [(i, x)] ++ sortWithFirst [backward | backward <- ixs, i <= fst backward]
+sortByFirst :: Ord a => [(a, b)] -> [(a, b)]
+sortByFirst [] = []
+sortByFirst ((i, x) : ixs) = sortByFirst [forward | forward <- ixs, fst forward < i] ++ [(i, x)] ++ sortByFirst [backward | backward <- ixs, i <= fst backward]
 
 tree2list :: Tree a -> [a]
-tree2list = map snd . sortWithFirst . flattenTree . numberTree
+tree2list = map snd . sortByFirst . flattenTree . numberTree
 
 data Direction  = L | R deriving Show
 type Directions = [Direction]
