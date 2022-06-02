@@ -50,6 +50,18 @@ completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) 
 freeTree :: Tree Char
 freeTree = completeBinaryTree "POLLYWANTSACRAC"
 
+data Direction  = L | R deriving Show
+type Directions = [Direction]
+
+changeChar :: Tree Char -> Directions -> Char -> Tree Char
+changeChar Empty _ _               = Empty
+changeChar (Node x l r) (L : ds) c = Node x (changeChar l ds c) r
+changeChar (Node x l r) (R : ds) c = Node x l (changeChar r ds c)
+changeChar (Node _ l r) [] c       = Node c l r
+
+newTree :: Tree Char
+newTree = changeChar freeTree [R, L] 'P'
+
 main :: IO ()
-main = putStrLn . show $ freeTree
+main = putStrLn . show $ newTree
 
