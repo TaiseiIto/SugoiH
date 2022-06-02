@@ -10,6 +10,9 @@ reverseNumbers n
  | n < 0     = []
  | otherwise = (n :) . reverseNumbers $ n - 1
 
+numbers :: Int -> [Int]
+numbers = reverse . reverseNumbers
+
 -- leftString :: String -> String
 -- rightString :: String -> String
 
@@ -18,5 +21,5 @@ reverseNumbers n
 -- completeBinaryTree (c : cs) = Node c (completeBinaryTree . leftString $ c : cs) (completeBinaryTree . rightString $ c : cs)
 
 main :: IO ()
-main = putStrLn . show . reverseNumbers $ 10
+main = putStrLn . show . numbers $ 10
 
