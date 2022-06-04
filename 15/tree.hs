@@ -115,6 +115,10 @@ goUp (t, LeftCrumb  x r : bs) = (Node x t r, bs)
 goUp (t, RightCrumb x l : bs) = (Node x l t, bs)
 goUp (_, [])                  = error "Error @ goUp"
 
+topMost :: Zipper a -> Zipper a
+topMost (t, []) = (t, [])
+topMost z       = topMost . goUp $ z
+
 modify :: (a -> a) -> Zipper a -> Zipper a
 modify f (Node x l r, bs) = (Node (f x) l r, bs)
 modify _ (Empty,      bs) = (Empty,          bs)
@@ -134,5 +138,5 @@ main = do
  putStrLn . show . elemAt [R, L] $ freeTree
  putStrLn . show . tree2list . fst $ (freeTree, []) -: goRight -: goLeft
  putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goRight -: modify (\_ -> 'P')
- putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goLeft -: goLeft -: goLeft -: attach (Node 'Z' Empty Empty) -: goUp -: goUp -: goUp -: goUp
+ putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goLeft -: goLeft -: goLeft -: attach (Node 'Z' Empty Empty) -: topMost
 
