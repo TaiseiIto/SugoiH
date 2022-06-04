@@ -133,20 +133,24 @@ freeTree = list2tree "POLLYWANTSACRAC"
 newTree :: Tree Char
 newTree = changeElement [R, L] 'P' freeTree
 
+unJust :: Maybe String -> String
+unJust (Just s) = s
+unJust Nothing  = ""
+
 main :: IO ()
 main = do
- putStrLn . show . tree2list $ newTree
+ putStrLn . tree2list $ newTree
  putStrLn . show . elemAt [R, L] $ freeTree
- putStrLn . show $ do
+ putStrLn . unJust $ do
   pos0 <- goRight . zipTree $ freeTree
   pos1 <- goLeft pos0
   return . tree2list . fst $ pos1
- putStrLn . show $ do
+ putStrLn . unJust $ do
   pos0 <- goRight . zipTree $ freeTree
   pos1 <- goLeft pos0
   pos2 <- topMost . modify (\_ -> 'P') $ pos1
   return . tree2list . fst $ pos2
- putStrLn . show $ do
+ putStrLn . unJust $ do
   pos0 <- goLeft . zipTree $ freeTree
   pos1 <- goLeft pos0
   pos2 <- goLeft pos1
