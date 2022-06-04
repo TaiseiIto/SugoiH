@@ -142,14 +142,15 @@ main = do
   pos1 <- goLeft pos0
   return . tree2list . fst $ pos1
  putStrLn . show $ do
-  pos0 <- goLeft . zipTree $ freeTree
-  pos1 <- goRight pos0
-  topMost . modify (\_ -> 'P') $ pos1
+  pos0 <- goRight . zipTree $ freeTree
+  pos1 <- goLeft pos0
+  pos2 <- topMost . modify (\_ -> 'P') $ pos1
+  return . tree2list . fst $ pos2
  putStrLn . show $ do
-  pos0     <- goLeft . zipTree $ freeTree
-  pos1     <- goLeft pos0
-  pos2     <- goLeft pos1
-  pos3     <- goLeft pos2
-  attached <- return . attach (Node 'Z' Empty Empty) $ pos3
-  topMost attached
+  pos0 <- goLeft . zipTree $ freeTree
+  pos1 <- goLeft pos0
+  pos2 <- goLeft pos1
+  pos3 <- goLeft pos2
+  pos4 <- topMost . attach (Node 'Z' Empty Empty) $ pos3
+  return . tree2list . fst $ pos4
 
