@@ -76,6 +76,12 @@ tree2list = map snd . sortByFirst . flattenTree . numberTree
 data Direction  = L | R deriving Show
 type Directions = [Direction]
 
+elemAt :: Directions -> Tree a -> a
+elemAt (L : ds) (Node _ l _) = elemAt ds l
+elemAt (R : ds) (Node _ _ r) = elemAt ds r
+elemAt []       (Node x _ _) = x
+elemAt _        Empty        = error "Error @ elemAt"
+
 changeElement :: Directions -> a -> Tree a -> Tree a
 changeElement _ _ Empty               = Empty
 changeElement (L : ds) y (Node x l r) = Node x (changeElement ds y l) r
@@ -89,5 +95,7 @@ newTree :: Tree Char
 newTree = changeElement [R, L] 'P' freeTree
 
 main :: IO ()
-main = putStrLn . show . tree2list $ newTree
+main = do
+ putStrLn . show . tree2list $ newTree
+ putStrLn . show . elemAt [R, L] $ newTree
 
