@@ -9,7 +9,10 @@ type Data = String
 data FSItem =
  File Name Data |
  Folder Name [FSItem]
- deriving Show
+
+instance Show FSItem where
+ show (File name dat) = name ++ ": " ++ dat
+ show (Folder name items) = (name ++) . ('\n' : ) . unlines . fmap (\line -> ' ' : line) . lines . unlines . fmap show $ items
 
 data FSCrumb = FSCrumb Name [FSItem] [FSItem] deriving Show
 
