@@ -57,7 +57,7 @@ rightList = map snd . filter (isRightInTree . fst) . numberList
 
 list2tree :: [a] -> Tree a
 list2tree [] = Empty
-list2tree (x : xs) = Node x (list2tree . leftList $ x : xs) (list2tree . rightList $ x : xs)
+list2tree xs = Node (head xs) (list2tree . leftList $ xs) (list2tree . rightList $ xs)
 
 numberSubTree :: Int -> Tree a -> Tree (Int, a)
 numberSubTree _ Empty        = Empty
