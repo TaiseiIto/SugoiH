@@ -73,28 +73,41 @@ sortByFirst ((i, x) : ixs) = sortByFirst [forward | forward <- ixs, fst forward 
 tree2list :: Tree a -> [a]
 tree2list = map snd . sortByFirst . flattenTree . numberTree
 
-data Direction  = L | R deriving Show
-type BreadCrumbs = [Direction]
+data Direction = L | R deriving Show
 
-elemAt :: BreadCrumbs -> Tree a -> a
+type Directions = [Direction]
+
+elemAt :: Directions -> Tree a -> a
 elemAt (L : ds) (Node _ l _) = elemAt ds l
 elemAt (R : ds) (Node _ _ r) = elemAt ds r
-elemAt []       (Node x _ _) = x
-elemAt _        Empty        = error "Error @ elemAt"
+elemAt []                    (Node x _ _) = x
+elemAt _                     Empty        = error "Error @ elemAt"
 
-changeElement :: BreadCrumbs -> a -> Tree a -> Tree a
+changeElement :: Directions -> a -> Tree a -> Tree a
 changeElement _ _ Empty               = Empty
 changeElement (L : ds) y (Node x l r) = Node x (changeElement ds y l) r
 changeElement (R : ds) y (Node x l r) = Node x l (changeElement ds y r)
 changeElement []       y (Node _ l r) = Node y l r
 
-goLeft :: (Tree a, BreadCrumbs) -> (Tree a, BreadCrumbs)
-goLeft (Node _ l _, bs) = (l, L:bs)
+data Crumb a =
+ LeftCrumb  a (Tree a) |
+ RightCrumb a (Tree a)
+ deriving Show
+
+type BreadCrumbs a = [Crumb a]
+
+goLeft :: (Tree a, BreadCrumbs a) -> (Tree a, BreadCrumbs a)
+goLeft (Node x l r, bs) = (l, LeftCrumb x r : bs)
 goLeft (Empty,      _)  = error "Error @ goLeft"
 
-goRight :: (Tree a, BreadCrumbs) -> (Tree a, BreadCrumbs)
-goRight (Node _ _ r, bs) = (r, R:bs)
+goRight :: (Tree a, BreadCrumbs a) -> (Tree a, BreadCrumbs a)
+goRight (Node x l r, bs) = (r, RightCrumb x l : bs)
 goRight (Empty,      _)  = error "Error @ goRight"
+
+goUp :: (Tree a, BreadCrumbs a) -> (Tree a, BreadCrumbs a)
+goUp (t, LeftCrumb  x r : bs) = (Node x t r, bs)
+goUp (t, RightCrumb x l : bs) = (Node x l t, bs)
+goUp (_, [])                  = error "Error @ goUp"
 
 freeTree :: Tree Char
 freeTree = list2tree "POLLYWANTSACRAC"
@@ -105,6 +118,6 @@ newTree = changeElement [R, L] 'P' freeTree
 main :: IO ()
 main = do
  putStrLn . show . tree2list $ newTree
- putStrLn . show . elemAt [R, L] $ newTree
- putStrLn . show . goLeft . goRight $ (newTree, [])
+ putStrLn . show . elemAt [R, L] $ freeTree
+ putStrLn . show . goLeft . goUp . goLeft . goRight $ (freeTree, [])
 
