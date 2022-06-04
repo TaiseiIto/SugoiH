@@ -119,6 +119,9 @@ modify :: (a -> a) -> Zipper a -> Zipper a
 modify f (Node x l r, bs) = (Node (f x) l r, bs)
 modify _ (Empty,      bs) = (Empty,          bs)
 
+attach :: Tree a -> Zipper a -> Zipper a
+attach t (_, bs) = (t, bs)
+
 freeTree :: Tree Char
 freeTree = list2tree "POLLYWANTSACRAC"
 
@@ -129,6 +132,7 @@ main :: IO ()
 main = do
  putStrLn . show . tree2list $ newTree
  putStrLn . show . elemAt [R, L] $ freeTree
- putStrLn . show . tree2list . fst $ (freeTree, []) -: goRight -: goLeft -: goUp -: goLeft
+ putStrLn . show . tree2list . fst $ (freeTree, []) -: goRight -: goLeft
  putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goRight -: modify (\_ -> 'P')
+ putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goLeft -: goLeft -: goLeft -: attach (Node 'Z' Empty Empty) -: goUp -: goUp -: goUp -: goUp
 
