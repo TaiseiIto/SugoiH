@@ -13,8 +13,12 @@ goBack :: ListZipper a -> Maybe (ListZipper a)
 goBack (xs, b : bs) = Just (b : xs, bs)
 goBack (_,      []) = Nothing
 
+unJust :: Maybe (ListZipper a) -> ListZipper a
+unJust (Just z) = z
+unJust Nothing  = ([], [])
+
 main :: IO ()
-main = putStrLn . show $ do
+main = putStrLn . show . unJust $ do
  pos <- goForward . zipList $ ([1, 2, 3, 4] :: [Int])
  goBack pos
 
