@@ -94,17 +94,19 @@ data Crumb a =
  RightCrumb a (Tree a)
  deriving Show
 
-type BreadCrumbs a = [Crumb a]
+type Breadcrumbs a = [Crumb a]
 
-goLeft :: (Tree a, BreadCrumbs a) -> (Tree a, BreadCrumbs a)
+type Zipper a = (Tree a, Breadcrumbs a)
+
+goLeft :: Zipper a -> Zipper a
 goLeft (Node x l r, bs) = (l, LeftCrumb x r : bs)
 goLeft (Empty,      _)  = error "Error @ goLeft"
 
-goRight :: (Tree a, BreadCrumbs a) -> (Tree a, BreadCrumbs a)
+goRight :: Zipper a -> Zipper a
 goRight (Node x l r, bs) = (r, RightCrumb x l : bs)
 goRight (Empty,      _)  = error "Error @ goRight"
 
-goUp :: (Tree a, BreadCrumbs a) -> (Tree a, BreadCrumbs a)
+goUp :: Zipper a -> Zipper a
 goUp (t, LeftCrumb  x r : bs) = (Node x t r, bs)
 goUp (t, RightCrumb x l : bs) = (Node x l t, bs)
 goUp (_, [])                  = error "Error @ goUp"
