@@ -1,5 +1,9 @@
 {-# OPTIONS -Wall -Werror #-}
 
+infixl 9 -:
+(-:) :: a -> (a -> b) -> b
+x -: f = f x
+
 data Tree a =
  Empty |
  Node a (Tree a) (Tree a)
@@ -111,6 +115,10 @@ goUp (t, LeftCrumb  x r : bs) = (Node x t r, bs)
 goUp (t, RightCrumb x l : bs) = (Node x l t, bs)
 goUp (_, [])                  = error "Error @ goUp"
 
+modify :: (a -> a) -> Zipper a -> Zipper a
+modify f (Node x l r, bs) = (Node (f x) l r, bs)
+modify _ (Empty,      bs) = (Empty,          bs)
+
 freeTree :: Tree Char
 freeTree = list2tree "POLLYWANTSACRAC"
 
@@ -121,5 +129,6 @@ main :: IO ()
 main = do
  putStrLn . show . tree2list $ newTree
  putStrLn . show . elemAt [R, L] $ freeTree
- putStrLn . show . goLeft . goUp . goLeft . goRight $ (freeTree, [])
+ putStrLn . show . tree2list . fst $ (freeTree, []) -: goRight -: goLeft -: goUp -: goLeft
+ putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goRight -: modify (\_ -> 'P')
 
