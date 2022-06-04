@@ -140,7 +140,7 @@ unJust Nothing  = ""
 main :: IO ()
 main = do
  putStrLn . tree2list $ newTree
- putStrLn . show . elemAt [R, L] $ freeTree
+ putStrLn . unJust . fmap (: []) . elemAt [R, L] $ freeTree
  putStrLn . unJust $ do
   pos0 <- goRight . zipTree $ freeTree
   pos1 <- goLeft pos0
