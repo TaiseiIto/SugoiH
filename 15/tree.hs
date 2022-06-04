@@ -76,17 +76,17 @@ tree2list = map snd . sortByFirst . flattenTree . numberTree
 data Direction  = L | R deriving Show
 type Directions = [Direction]
 
-changeElement :: Tree a -> Directions -> a -> Tree a
-changeElement Empty _ _               = Empty
-changeElement (Node x l r) (L : ds) y = Node x (changeElement l ds y) r
-changeElement (Node x l r) (R : ds) y = Node x l (changeElement r ds y)
-changeElement (Node _ l r) [] y       = Node y l r
+changeElement :: Directions -> a -> Tree a -> Tree a
+changeElement _ _ Empty               = Empty
+changeElement (L : ds) y (Node x l r) = Node x (changeElement ds y l) r
+changeElement (R : ds) y (Node x l r) = Node x l (changeElement ds y r)
+changeElement []       y (Node _ l r) = Node y l r
 
 freeTree :: Tree Char
 freeTree = list2tree "POLLYWANTSACRAC"
 
 newTree :: Tree Char
-newTree = changeElement freeTree [R, L] 'P'
+newTree = changeElement [R, L] 'P' freeTree
 
 main :: IO ()
 main = putStrLn . show . tree2list $ newTree
