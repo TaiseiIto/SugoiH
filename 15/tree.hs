@@ -1,9 +1,5 @@
 {-# OPTIONS -Wall -Werror #-}
 
-infixl 9 -:
-(-:) :: a -> (a -> b) -> b
-x -: f = f x
-
 data Tree a =
  Empty |
  Node a (Tree a) (Tree a)
@@ -141,20 +137,20 @@ main :: IO ()
 main = do
  putStrLn . show . tree2list $ newTree
  putStrLn . show . elemAt [R, L] $ freeTree
- putStrLn . show . tree2list . fst $ do
+ putStrLn . show $ do
   pos0 <- goRight . zipTree $ freeTree
   pos1 <- goLeft pos0
   tree <- return . fst $ pos1
   return . tree2list $ tree
- putStrLn . show . tree2list . fst $ do
+ putStrLn . show $ do
   pos0 <- goLeft . zipTree $ freeTree
   pos1 <- goRight pos0
-  return modify (\_ -> 'P') pos1
- putStrLn . show . tree2list . fst $ do
+  return . modify (\_ -> 'P') $ pos1
+ putStrLn . show $ do
   pos0     <- goLeft . zipTree $ freeTree
   pos1     <- goLeft pos0
   pos2     <- goLeft pos1
   pos3     <- goLeft pos2
-  attached <- return attach (Node 'Z' Empty Empty) pos3
+  attached <- return . attach (Node 'Z' Empty Empty) $ pos3
   topMost attached
 
