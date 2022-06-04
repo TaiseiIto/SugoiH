@@ -5,14 +5,16 @@ type ListZipper a = ([a], [a])
 zipList :: [a] -> ListZipper a
 zipList list = (list, [])
 
-goForward :: ListZipper a -> ListZipper a
-goForward (x : xs, bs) = (xs, x : bs)
-goForward ([],     _)  = error "Error @ goForward"
+goForward :: ListZipper a -> Maybe (ListZipper a)
+goForward (x : xs, bs) = Just (xs, x : bs)
+goForward ([],     _)  = Nothing
 
-goBack :: ListZipper a -> ListZipper a
-goBack (xs, b : bs) = (b : xs, bs)
-goBack (_,      []) = error "Error @ goBack"
+goBack :: ListZipper a -> Maybe (ListZipper a)
+goBack (xs, b : bs) = Just (b : xs, bs)
+goBack (_,      []) = Nothing
 
 main :: IO ()
-main = putStrLn . (show :: ListZipper Int -> String) . goBack . goForward . zipList $ [1, 2, 3, 4]
+main = putStrLn . show $ do
+ pos <- goForward . zipList $ ([1, 2, 3, 4] :: [Int])
+ goBack pos
 
