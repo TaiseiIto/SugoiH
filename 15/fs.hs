@@ -38,6 +38,10 @@ fsRename :: Name -> FSZipper -> FSZipper
 fsRename newName (Folder _ items, bs) = (Folder newName items, bs)
 fsRename newName (File   _ dat,   bs) = (File   newName dat,   bs)
 
+fsNewFile :: FSItem -> FSZipper -> FSZipper
+fsNewFile item (Folder folderName items, bs) = (Folder folderName (item : items), bs)
+fsNewFile _    (File _ _,                _)  = error "Error @ fsNewFile"
+
 myDisk :: FSItem
 myDisk =
  Folder "root"
@@ -71,7 +75,7 @@ newFocus2 :: FSZipper
 newFocus2 = newFocus -: fsUp -: fsTo "watermelon_smash.gif"
 
 newFocus3 :: FSZipper
-newFocus3 = myDisk -: zipFS -: fsTo "pics" -: fsRename "cspi" -: fsUp
+newFocus3 = myDisk -: zipFS -: fsTo "pics" -: fsRename "cspi" -: fsNewFile (File "heh.jpg" "lol") -: fsUp
 
 main :: IO ()
 main = do
