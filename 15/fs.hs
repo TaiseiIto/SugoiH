@@ -11,8 +11,8 @@ data FSItem =
  Folder Name [FSItem]
 
 instance Show FSItem where
- show (File name dat) = name ++ ": " ++ dat
- show (Folder name items) = (name ++) . ('\n' : ) . unlines . fmap (init . unlines . fmap (' ' :) . lines) . fmap show $ items
+ show (File name dat) = name ++ " : " ++ dat
+ show (Folder name items) = (name ++) . ('\n' : ) . init . unlines . fmap (init . unlines . fmap (' ' :) . lines) . fmap show $ items
 
 data FSCrumb = FSCrumb Name [FSItem] [FSItem] deriving Show
 
