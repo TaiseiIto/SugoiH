@@ -2,10 +2,6 @@
 
 import qualified Data.List
 
-infixl 0 -:
-(-:) :: a -> (a -> b) -> b
-x -: f = f x
-
 type Name = String
 
 type Data = String
@@ -26,21 +22,21 @@ nameIs :: Name -> FSItem -> Bool
 nameIs name (Folder folderName _) = name == folderName
 nameIs name (File   fileName   _) = name == fileName
 
-fsTo :: Name -> FSZipper -> FSZipper
-fsTo name (Folder folderName items, bs) = let (ls, item : rs) = Data.List.break (nameIs name) items in (item, FSCrumb folderName ls rs : bs)
-fsTo _    (File _ _,                _)  = error "Error @ fsTo"
+fsTo :: Name -> FSZipper -> Maybe FSZipper
+fsTo name (Folder folderName items, bs) = let (ls, item : rs) = Data.List.break (nameIs name) items in Just (item, FSCrumb folderName ls rs : bs)
+fsTo _    (File _ _,                _)  = Nothing
 
-fsUp :: FSZipper -> FSZipper
-fsUp (item, FSCrumb name ls rs : bs) = (Folder name $ ls ++ [item] ++ rs, bs)
-fsUp (_   , [])                      = error "Error @ fsUp"
+fsUp :: FSZipper -> Maybe FSZipper
+fsUp (item, FSCrumb name ls rs : bs) = Just (Folder name $ ls ++ [item] ++ rs, bs)
+fsUp (_   , [])                      = Nothing
 
 fsRename :: Name -> FSZipper -> FSZipper
 fsRename newName (Folder _ items, bs) = (Folder newName items, bs)
 fsRename newName (File   _ dat,   bs) = (File   newName dat,   bs)
 
-fsNewFile :: FSItem -> FSZipper -> FSZipper
-fsNewFile item (Folder folderName items, bs) = (Folder folderName (item : items), bs)
-fsNewFile _    (File _ _,                _)  = error "Error @ fsNewFile"
+fsNewFile :: FSItem -> FSZipper -> Maybe FSZipper
+fsNewFile item (Folder folderName items, bs) = Just (Folder folderName (item : items), bs)
+fsNewFile _    (File _ _,                _)  = Nothing
 
 myDisk :: FSItem
 myDisk =
@@ -68,14 +64,25 @@ myDisk =
     ]
   ]
 
+unJust :: Maybe FSZipper -> FSZipper
+unJust (Just z) = z
+unJust Nothing  = (File "" "", [])
+
 newFocus :: FSZipper
-newFocus = myDisk -: zipFS -: fsTo "pics" -: fsTo "skull_man(scary).bmp"
+newFocus = unJust $ do
+ pos0 <- fsTo "pics" . zipFS $ myDisk
+ fsTo "skull_man(scary).bmp" pos0
 
 newFocus2 :: FSZipper
-newFocus2 = newFocus -: fsUp -: fsTo "watermelon_smash.gif"
+newFocus2 = unJust $ do
+ pos0 <- fsUp newFocus
+ fsTo "watermelon_smash.gif" pos0
 
 newFocus3 :: FSZipper
-newFocus3 = myDisk -: zipFS -: fsTo "pics" -: fsRename "cspi" -: fsNewFile (File "heh.jpg" "lol") -: fsUp
+newFocus3 = unJust $ do
+ pos0 <- fsTo "pics" . zipFS $ myDisk
+ pos1 <- fsNewFile (File "heh.jps" "lol") . fsRename "cspi" $ pos0
+ fsUp pos1
 
 main :: IO ()
 main = do
