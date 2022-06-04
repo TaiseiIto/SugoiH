@@ -34,6 +34,10 @@ fsUp :: FSZipper -> FSZipper
 fsUp (item, FSCrumb name ls rs : bs) = (Folder name $ ls ++ [item] ++ rs, bs)
 fsUp (_   , [])                      = error "Error @ fsUp"
 
+fsRename :: Name -> FSZipper -> FSZipper
+fsRename newName (Folder _ items, bs) = (Folder newName items, bs)
+fsRename newName (File   _ dat,   bs) = (File   newName dat,   bs)
+
 myDisk :: FSItem
 myDisk =
  Folder "root"
@@ -66,8 +70,12 @@ newFocus = myDisk -: zipFS -: fsTo "pics" -: fsTo "skull_man(scary).bmp"
 newFocus2 :: FSZipper
 newFocus2 = newFocus -: fsUp -: fsTo "watermelon_smash.gif"
 
+newFocus3 :: FSZipper
+newFocus3 = myDisk -: zipFS -: fsTo "pics" -: fsRename "cspi" -: fsUp
+
 main :: IO ()
 main = do
  putStrLn . show $ newFocus
  putStrLn . show $ newFocus2
+ putStrLn . show $ newFocus3
 
