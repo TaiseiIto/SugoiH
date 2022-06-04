@@ -140,12 +140,11 @@ main = do
  putStrLn . show $ do
   pos0 <- goRight . zipTree $ freeTree
   pos1 <- goLeft pos0
-  tree <- return . fst $ pos1
-  return . tree2list $ tree
+  return . tree2list . fst $ pos1
  putStrLn . show $ do
   pos0 <- goLeft . zipTree $ freeTree
   pos1 <- goRight pos0
-  return . modify (\_ -> 'P') $ pos1
+  topMost . modify (\_ -> 'P') $ pos1
  putStrLn . show $ do
   pos0     <- goLeft . zipTree $ freeTree
   pos1     <- goLeft pos0
