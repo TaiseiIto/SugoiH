@@ -2,6 +2,10 @@
 
 import qualified Data.List
 
+infixl 0 -:
+(-:) :: a -> (a -> b) -> b
+x -: f = f x
+
 type Name = String
 
 type Data = String
@@ -56,6 +60,14 @@ myDisk =
     ]
   ]
 
+newFocus :: FSZipper
+newFocus = myDisk -: zipFS -: fsTo "pics" -: fsTo "skull_man(scary).bmp"
+
+newFocus2 :: FSZipper
+newFocus2 = newFocus -: fsUp -: fsTo "watermelon_smash.gif"
+
 main :: IO ()
-main = putStrLn . show . fsUp . fsTo "dijon_poupon.doc" . zipFS $ myDisk
+main = do
+ putStrLn . show $ newFocus
+ putStrLn . show $ newFocus2
 
