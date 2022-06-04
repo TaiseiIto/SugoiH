@@ -86,7 +86,7 @@ newFocus3 = unJust $ do
 
 main :: IO ()
 main = do
- putStrLn . show $ newFocus
- putStrLn . show $ newFocus2
- putStrLn . show $ newFocus3
+ putStrLn . show . fst $ newFocus
+ putStrLn . show . fst $ newFocus2
+ putStrLn . show . fst $ newFocus3
 
