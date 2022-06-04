@@ -81,11 +81,11 @@ data Direction = L | R deriving Show
 
 type Directions = [Direction]
 
-elemAt :: Directions -> Tree a -> a
-elemAt (L : ds) (Node _ l _) = elemAt ds l
-elemAt (R : ds) (Node _ _ r) = elemAt ds r
-elemAt []                    (Node x _ _) = x
-elemAt _                     Empty        = error "Error @ elemAt"
+elemAt :: Directions -> Tree a -> Maybe a
+elemAt (L : ds) (Node _ l _) = elemAt ds $ l
+elemAt (R : ds) (Node _ _ r) = elemAt ds $ r
+elemAt []       (Node x _ _) = Just x
+elemAt _        Empty        = Nothing
 
 changeElement :: Directions -> a -> Tree a -> Tree a
 changeElement _ _ Empty               = Empty
@@ -102,22 +102,27 @@ type Breadcrumbs a = [Crumb a]
 
 type Zipper a = (Tree a, Breadcrumbs a)
 
-goLeft :: Zipper a -> Zipper a
-goLeft (Node x l r, bs) = (l, LeftCrumb x r : bs)
-goLeft (Empty,      _)  = error "Error @ goLeft"
+zipTree :: Tree a -> Zipper a
+zipTree tree = (tree, [])
 
-goRight :: Zipper a -> Zipper a
-goRight (Node x l r, bs) = (r, RightCrumb x l : bs)
-goRight (Empty,      _)  = error "Error @ goRight"
+goLeft :: Zipper a -> Maybe (Zipper a)
+goLeft (Node x l r, bs) = Just (l, LeftCrumb x r : bs)
+goLeft (Empty,      _)  = Nothing
 
-goUp :: Zipper a -> Zipper a
-goUp (t, LeftCrumb  x r : bs) = (Node x t r, bs)
-goUp (t, RightCrumb x l : bs) = (Node x l t, bs)
-goUp (_, [])                  = error "Error @ goUp"
+goRight :: Zipper a -> Maybe (Zipper a)
+goRight (Node x l r, bs) = Just (r, RightCrumb x l : bs)
+goRight (Empty,      _)  = Nothing
 
-topMost :: Zipper a -> Zipper a
-topMost (t, []) = (t, [])
-topMost z       = topMost . goUp $ z
+goUp :: Zipper a -> Maybe (Zipper a)
+goUp (t, LeftCrumb  x r : bs) = Just (Node x t r, bs)
+goUp (t, RightCrumb x l : bs) = Just (Node x l t, bs)
+goUp (_, [])                  = Nothing
+
+topMost :: Zipper a -> Maybe (Zipper a)
+topMost (t, []) = Just (t, [])
+topMost z       = do
+ up <- goUp z
+ topMost up
 
 modify :: (a -> a) -> Zipper a -> Zipper a
 modify f (Node x l r, bs) = (Node (f x) l r, bs)
@@ -136,7 +141,20 @@ main :: IO ()
 main = do
  putStrLn . show . tree2list $ newTree
  putStrLn . show . elemAt [R, L] $ freeTree
- putStrLn . show . tree2list . fst $ (freeTree, []) -: goRight -: goLeft
- putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goRight -: modify (\_ -> 'P')
- putStrLn . show . tree2list . fst $ (freeTree, []) -: goLeft -: goLeft -: goLeft -: goLeft -: attach (Node 'Z' Empty Empty) -: topMost
+ putStrLn . show . tree2list . fst $ do
+  pos0 <- goRight . zipTree $ freeTree
+  pos1 <- goLeft pos0
+  tree <- return . fst $ pos1
+  return . tree2list $ tree
+ putStrLn . show . tree2list . fst $ do
+  pos0 <- goLeft . zipTree $ freeTree
+  pos1 <- goRight pos0
+  return modify (\_ -> 'P') pos1
+ putStrLn . show . tree2list . fst $ do
+  pos0     <- goLeft . zipTree $ freeTree
+  pos1     <- goLeft pos0
+  pos2     <- goLeft pos1
+  pos3     <- goLeft pos2
+  attached <- return attach (Node 'Z' Empty Empty) pos3
+  topMost attached
 
